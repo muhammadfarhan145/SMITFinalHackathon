@@ -3,32 +3,32 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e: any) => {
+  const handleRegister = async (e: any) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ name, email, password })
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        // save token
-        localStorage.setItem("token", data.token);
+        alert("Registered successfully");
 
-        // redirect
-        router.push("/home");
+        // optional: auto-login flow (skip for now)
+        router.push("/");
       } else {
         alert(data.message);
       }
@@ -41,9 +41,17 @@ export default function LoginPage() {
 
   return (
     <div style={{ padding: "40px" }}>
-      <h1>Login</h1>
+      <h1>Register</h1>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <br /><br />
+
         <input
           type="email"
           placeholder="Email"
@@ -60,7 +68,7 @@ export default function LoginPage() {
         />
         <br /><br />
 
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
     </div>
   );
